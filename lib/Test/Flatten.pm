@@ -96,7 +96,9 @@ Test::Flatten is override Test::More::subtest.
 
 The subtest I think there are some problems.
 
-1. Caption is appears at end of subtest block.
+=over
+
+=item 1. Caption is appears at end of subtest block.
 
   use Test::More;
 
@@ -116,7 +118,7 @@ The subtest I think there are some problems.
 
 I want B<< FIRST >>.
 
-2. Summarizes the test would count.
+=item 2. Summarizes the test would count.
 
   use Test::More;
 
@@ -137,7 +139,7 @@ I want B<< FIRST >>.
 
 I want B<< 2 >>.
 
-3. Forked test output will be broken. (Even with Test::SharedFork!)
+=item 3. Forked test output will be broken. (Even with Test::SharedFork!)
 
   use Test::More;
   
@@ -175,6 +177,8 @@ I want B<< 2 >>.
 
 oh, really? I want B<< FAIL >> and sync count.
 
+=back
+
 Yes, We can!!
 
 =head1 FUNCTIONS 
@@ -201,5 +205,7 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 SEE ALSO
+
+L<< Test::SharedFork >>
 
 =cut
