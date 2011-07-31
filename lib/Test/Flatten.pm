@@ -15,6 +15,8 @@ our $CAPTION_COLOR = ['clear'];
 
 our $ORG_SUBTEST = Test::More->can('subtest');
 
+$ENV{ANSI_COLORS_DISABLED} = 1 if $^O eq 'MSWin32';
+
 sub import {
     my $class = caller(0);
     no warnings 'redefine';
