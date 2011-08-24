@@ -1,4 +1,7 @@
 Revision history for Perl extension Test::Flatten
 
+0.02  Thu Aug 25 02:42:52 2011
+    - fix: If done_testing called in subtest, did not work.
+
 0.01  Thu Aug 25 01:51:15 2011
     - original version
