@@ -2,7 +2,7 @@
 \bCVS\b
 \.svn/
 \.git/
-^MANIFEST\.
+^MANIFEST\.bak
 ^Makefile$
 ~$
 \.old$
