@@ -8,6 +8,7 @@ test_requires 'Test::SharedFork', 0.16;
 tests join q{ }, map { sprintf 't%s.t', '/*' x $_ } 1..3;
 author_tests 'xt';
 
-auto_set_repository();
+repository 'https://github.com/xaicron/p5-Test-Flatten';
+bugtracker 'https://github.com/xaicron/p5-Test-Flatten/issues';
 
 WriteAll;
