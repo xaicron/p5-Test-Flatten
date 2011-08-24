@@ -25,19 +25,24 @@ sub import {
     *Test::More::subtest = \&subtest;
 }
 
-my $BUILDER;
+sub builder { Test::More->builder }
+
 sub subtest {
     my ($caption, $test) = @_;
-    $BUILDER ||= Test::Builder->new;
 
     unless (ref $test eq 'CODE') {
-        $BUILDER->croak("subtest()'s second argument must be a code ref");
+        builder->croak("subtest()'s second argument must be a code ref");
     }
 
-    $BUILDER->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
-    $BUILDER->note(colored $CAPTION_COLOR, $caption);
-    $BUILDER->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
-    goto &$test;
+    builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+    builder->note(colored $CAPTION_COLOR, $caption);
+    builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+
+    no warnings 'redefine';
+    no strict 'refs';
+    local *{ref(builder).'::done_testing'} = sub {}; # temporary disabled
+    local $Test::Builder::Level = $Test::Builder::Level + 2;
+    $test->();
 }
 
 1;
