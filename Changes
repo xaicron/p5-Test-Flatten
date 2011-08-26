@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Flatten
 
+0.03  Fri Aug 26 23:11:12 2011
+    - fix: Workaround for old Term::ASINColor (reported by tokuhirom++)
+
 0.02  Thu Aug 25 02:42:52 2011
     - fix: If done_testing called in subtest, did not work.
 
