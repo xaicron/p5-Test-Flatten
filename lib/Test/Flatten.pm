@@ -8,7 +8,7 @@ use Term::ANSIColor qw(colored);
 
 our $VERSION = '0.02';
 
-our $BORDER_COLOR  = [qw|bright_cyan bold|];
+our $BORDER_COLOR  = [qw|cyan bold|];
 our $BORDER_CHAR   = '-';
 our $BORDER_LENGTH = 78;
 our $CAPTION_COLOR = ['clear'];
