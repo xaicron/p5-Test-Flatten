@@ -1,8 +1,10 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::SharedFork;
+use Test::Requires { 'Test::SharedFork' => 0.16 };
 use Test::Flatten;
+
+plan skip_all => 'fork is not supported on Win32' if $^O eq 'MSWin32';
 
 subtest 'foo' => sub {
     pass 'parent one';
