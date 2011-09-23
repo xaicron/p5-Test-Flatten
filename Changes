@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Flatten
 
+0.04  Fri Sep 23 16:05:17 2011
+    - fix: plan() did not works.
+
 0.03  Fri Aug 26 23:11:12 2011
     - fix: Workaround for old Term::ASINColor (reported by tokuhirom++)
 
