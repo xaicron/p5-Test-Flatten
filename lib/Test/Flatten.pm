@@ -25,24 +25,119 @@ sub import {
     *Test::More::subtest = \&subtest;
 }
 
-sub builder { Test::More->builder }
+my $TEST_DIFF = 0;
+END {
+    if ($TEST_DIFF) {
+        my $builder = Test::More->builder;
+        _diag_plan($builder->{Curr_Test} - $TEST_DIFF, $builder->{Curr_Test});
+        Test::Builder::_my_exit(255); # report fail
+        undef $Test::Builder::Test;   # disabled original END{} block
+    }
+}
 
 sub subtest {
     my ($caption, $test) = @_;
 
+    my $builder = Test::More->builder;
     unless (ref $test eq 'CODE') {
-        builder->croak("subtest()'s second argument must be a code ref");
+        $builder->croak("subtest()'s second argument must be a code ref");
     }
 
-    builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
-    builder->note(colored $CAPTION_COLOR, $caption);
-    builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+    $builder->note(colored $CAPTION_COLOR, $caption);
+    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+
+    # copying original setting
+    my $current_test = $builder->{Curr_Test};
+    my $skip_all     = $builder->{Skip_All};
+    my $have_plan    = $builder->{Have_Plan};
+    my $no_plan      = $builder->{No_Plan};
+
+    # reset
+    $builder->{Have_Plan} = 0;
 
     no warnings 'redefine';
     no strict 'refs';
-    local *{ref(builder).'::done_testing'} = sub {}; # temporary disabled
-    local $Test::Builder::Level = $Test::Builder::Level + 2;
-    $test->();
+    local *{ref($builder).'::plan'} = _fake_plan(\my $tests, \my $is_skip_all);
+    local *{ref($builder).'::done_testing'} = sub {}; # temporary disabled
+
+    use warnings;
+    use strict;
+
+    local $@;
+    my $is_passing = eval {
+        local $Test::Builder::Level = $Test::Builder::Level + 2;
+        $test->();
+    };
+    my $e = $@;
+
+    if ($is_skip_all) {
+        $builder->{Skip_All} = $skip_all;
+    }
+    elsif ($tests && $builder->{Curr_Test} != $current_test + $tests) {
+        _diag_plan($tests, $builder->{Curr_Test}- $current_test);
+        $TEST_DIFF = $builder->{Curr_Test} - $current_test - $tests;
+        $is_passing = $builder->is_passing(0);
+    }
+
+    # restore
+    $builder->{Have_Plan} = $have_plan;
+    $builder->{No_Plan}   = $no_plan;
+
+    die $e if $e && !eval { $e->isa('Test::Builder::Exception') };
+
+    return $is_passing;
+}
+
+sub _diag_plan {
+    my ($plan, $ran) = @_;
+    my $s = $plan == 1 ? '' : 's';
+    Test::More->builder->diag(sprintf 'Looks like you planned %d test%s but ran %d.',
+        $plan, $s, $ran,
+    );
+}
+
+sub _fake_plan {
+    my ($tests, $is_skip_all) = @_;
+
+    return sub {
+        my ($self, $cmd, $arg) = @_;
+        return unless $cmd;
+        local $Test::Builder::Level = $Test::Builder::Level + 2;
+        $self->croak("You tried to plan twice") if $self->{Have_Plan};
+
+        if ($cmd eq 'no_plan') {
+            local $Test::Builder::Level = $Test::Builder::Level + 1;
+            $self->no_plan($arg);
+        }
+        elsif ($cmd eq 'skip_all') {
+            local $Test::Builder::Level = $Test::Builder::Level + 1;
+            $self->{Skip_All} = 1;
+            $self->note(join q{ }, 'SKIP:', $arg) unless $self->no_header;
+            $$is_skip_all = 1; # set flag
+            die bless {}, 'Test::Builder::Exception';
+        }
+        elsif ($cmd eq 'tests') {
+            if($arg) {
+                local $Test::Builder::Level = $Test::Builder::Level + 1;
+                unless ($arg =~ /^\+?\d+$/) {
+                    $self->croak("Number of tests must be a positive integer.  You gave it '$arg'");
+                }
+                $$tests = $arg; # set tests
+            }
+            elsif( !defined $arg ) {
+                $self->croak("Got an undefined number of tests");
+            }
+            else {
+                $self->croak("You said to run 0 tests");
+            }
+        }
+        else {
+            my @args = grep { defined } ( $cmd, $arg );
+            $self->croak("plan() doesn't understand @args");
+        }
+        return 1;
+    };
 }
 
 1;
