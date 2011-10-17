@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Flatten
 
+0.05  Tue Oct 18 01:10:44 2011
+    - Added support for SUBTEST_FILTER environment variable. (idea from tokuhirom++)
+
 0.04  Fri Sep 23 16:05:17 2011
     - fix: plan() did not works.
 
