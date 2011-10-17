@@ -12,6 +12,7 @@ our $BORDER_COLOR  = [qw|cyan bold|];
 our $BORDER_CHAR   = '-';
 our $BORDER_LENGTH = 78;
 our $CAPTION_COLOR = ['clear'];
+our $NOTE_COLOR    = ['yellow'];
 
 our $ORG_SUBTEST = Test::More->can('subtest');
 
@@ -43,15 +44,27 @@ sub subtest {
         $builder->croak("subtest()'s second argument must be a code ref");
     }
 
-    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
-    $builder->note(colored $CAPTION_COLOR, $caption);
-    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
-
     # copying original setting
     my $current_test = $builder->{Curr_Test};
     my $skip_all     = $builder->{Skip_All};
     my $have_plan    = $builder->{Have_Plan};
     my $no_plan      = $builder->{No_Plan};
+    my $in_filter    = $builder->{__in_filter__};
+
+    ## this idea from http://d.hatena.ne.jp/tokuhirom/20111017/1318831330
+    if (my $filter  = $ENV{SUBTEST_FILTER}) {
+        if ($caption =~ qr{\Q$filter\E} || $in_filter) {
+            $builder->{__in_filter__} = 1;
+        }
+        else {
+            $builder->note(colored $NOTE_COLOR, "SKIP: $caption by SUBTEST_FILTER");
+            return;
+        }
+    }
+
+    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
+    $builder->note(colored $CAPTION_COLOR, $caption);
+    $builder->note(colored $BORDER_COLOR, $BORDER_CHAR x $BORDER_LENGTH);
 
     # reset
     $builder->{Have_Plan} = 0;
@@ -81,8 +94,9 @@ sub subtest {
     }
 
     # restore
-    $builder->{Have_Plan} = $have_plan;
-    $builder->{No_Plan}   = $no_plan;
+    $builder->{Have_Plan}     = $have_plan;
+    $builder->{No_Plan}       = $no_plan;
+    $builder->{__in_filter__} = $in_filter;
 
     die $e if $e && !eval { $e->isa('Test::Builder::Exception') };
 
@@ -292,6 +306,21 @@ Yes, We can!!
 This like Test::More::subtest.
 
 =back
+
+=head1 SUBTEST_FILTER
+
+If you need, you can using C<< SUBTEST_FILTER >> environment.
+This is just a B<< *hack* >> to skip only blocks matched the block name by environment variable.
+C<< SUBTEST_FILTER >> variable can use regexp
+
+  $ env SUBTEST_FILTER=foo prove -lvc t/bar.t
+  # SKIP: bar by SUBTEST_FILTER
+  # ------------------------------------------------------------------------------
+  # foo
+  # ------------------------------------------------------------------------------
+  ok 1 - passed
+  # SKIP: baz by SUBTEST_FILTER
+  1..1
 
 =head1 AUTHOR
 
