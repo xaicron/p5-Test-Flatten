@@ -78,10 +78,9 @@ sub subtest {
     use strict;
 
     local $@;
-    my $is_passing = eval {
-        local $Test::Builder::Level = $Test::Builder::Level + 2;
-        $test->();
-    };
+
+    local $Test::Builder::Level = $Test::Builder::Level = 1;
+    my $is_passing = eval { $test->(); 1 };
     my $e = $@;
 
     if ($is_skip_all) {
