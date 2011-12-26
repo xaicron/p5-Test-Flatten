@@ -20,7 +20,7 @@ $ENV{ANSI_COLORS_DISABLED} = 1 if $^O eq 'MSWin32';
 
 sub import {
     my $class = caller(0);
-    no warnings 'redefine';
+    no warnings qw(redefine prototype);
     no strict 'refs';
     *{"$class\::subtest"} = \&subtest;
     *Test::More::subtest = \&subtest;
