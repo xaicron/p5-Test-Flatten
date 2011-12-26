@@ -77,8 +77,6 @@ sub subtest {
     use warnings;
     use strict;
 
-    local $@;
-
     local $Test::Builder::Level = $Test::Builder::Level = 1;
     my $is_passing = eval { $test->(); 1 };
     my $e = $@;
