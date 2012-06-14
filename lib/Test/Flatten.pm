@@ -89,6 +89,9 @@ sub subtest {
         $TEST_DIFF = $builder->{Curr_Test} - $current_test - $tests;
         $is_passing = $builder->is_passing(0);
     }
+    elsif ($builder->{Curr_Test} == $current_test) {
+        $builder->croak("No tests run for subtest $caption");
+    }
 
     # restore
     $builder->{Have_Plan}     = $have_plan;
