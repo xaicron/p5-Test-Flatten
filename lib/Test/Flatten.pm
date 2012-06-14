@@ -85,7 +85,7 @@ sub subtest {
         $builder->{Skip_All} = $skip_all;
     }
     elsif ($tests && $builder->{Curr_Test} != $current_test + $tests) {
-        _diag_plan($tests, $builder->{Curr_Test}- $current_test);
+        _diag_plan($tests, $builder->{Curr_Test} - $current_test);
         $TEST_DIFF = $builder->{Curr_Test} - $current_test - $tests;
         $is_passing = $builder->is_passing(0);
     }
