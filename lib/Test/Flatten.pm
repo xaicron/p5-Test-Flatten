@@ -53,7 +53,7 @@ sub subtest {
 
     ## this idea from http://d.hatena.ne.jp/tokuhirom/20111017/1318831330
     if (my $filter  = $ENV{SUBTEST_FILTER}) {
-        if ($caption =~ qr{\Q$filter\E} || $in_filter) {
+        if ($caption =~ qr{$filter} || $in_filter) {
             $builder->{__in_filter__} = 1;
         }
         else {

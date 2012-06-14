@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 use Test::Flatten;
 
-plan tests => 2;
+plan tests => 3;
 
 $ENV{SUBTEST_FILTER} = 'bar';
 
@@ -27,4 +27,14 @@ subtest 'not passed' => sub {
     subtest 'nest' => sub {
         fail 'oops!';
     };
+};
+
+$ENV{SUBTEST_FILTER} = '\d+';
+
+subtest 'regexp fail' => sub {
+    fail 'oops!';
+};
+
+subtest 'regexp pass 100' => sub {
+    pass 'regexp ok';
 };
