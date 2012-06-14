@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::Flatten
 
+0.08  Thu Jun 14 20:10:34 2012
+    - fix: to fail if there is no tests
+    - enabled regexp on SUBTEST_FILTER
+
 0.07  Tue Dec 27 01:38:07 2011
     - fix: local $@ problem on less than 5.14.0 (reported by issm++)
 
