@@ -81,6 +81,8 @@ sub subtest {
     my $is_passing = eval { $test->(); 1 };
     my $e = $@;
 
+    die $e if $e && !eval { $e->isa('Test::Builder::Exception') };
+
     if ($is_skip_all) {
         $builder->{Skip_All} = $skip_all;
     }
@@ -97,8 +99,6 @@ sub subtest {
     $builder->{Have_Plan}     = $have_plan;
     $builder->{No_Plan}       = $no_plan;
     $builder->{__in_filter__} = $in_filter;
-
-    die $e if $e && !eval { $e->isa('Test::Builder::Exception') };
 
     return $is_passing;
 }
