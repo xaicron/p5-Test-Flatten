@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Flatten
 
+0.09  Tue Jul  3 18:12:51 2012
+    - fix: There was that no exceptions are thrown (sugyan++)
+
 0.08  Thu Jun 14 20:10:34 2012
     - fix: to fail if there is no tests
     - enabled regexp on SUBTEST_FILTER
