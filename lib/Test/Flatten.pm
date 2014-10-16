@@ -37,7 +37,7 @@ END {
 }
 
 sub subtest {
-    my ($caption, $test) = @_;
+    my ($caption, $test, @args) = @_;
 
     my $builder = Test::More->builder;
     unless (ref $test eq 'CODE') {
@@ -78,7 +78,7 @@ sub subtest {
     use strict;
 
     local $Test::Builder::Level = $Test::Builder::Level = 1;
-    my $is_passing = eval { $test->(); 1 };
+    my $is_passing = eval { $test->(@args); 1 };
     my $e = $@;
 
     die $e if $e && !eval { $e->isa('Test::Builder::Exception') };
