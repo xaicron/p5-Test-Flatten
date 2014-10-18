@@ -60,9 +60,9 @@
          "web" : "https://git@github.com/xaicron/p5-Test-Flatten"
       }
    },
-   "version" : "0.09",
+   "version" : "0.10",
    "x_contributors" : [
       "Hiroyoshi Houchi <git@hixi-hyi.com>",
-      "Yuji Shimada <xaicron@gmail.com>"
+      "xaicron <xaicron@gmail.com>"
    ]
 }
