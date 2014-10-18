@@ -16,6 +16,10 @@ subtest 'bar' => sub {
     };
 };
 
+subtest 'argument (Test::More supported after 1.001004_001)' => sub {
+    is $_[0], 'str';
+}, 'str';
+
 pass 'ok';
 
 done_testing;
