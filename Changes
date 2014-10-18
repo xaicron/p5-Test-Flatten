@@ -1,5 +1,7 @@
 Revision history for Perl extension Test::Flatten
 
+{{$NEXT}}
+
 0.09  Tue Jul  3 18:12:51 2012
     - fix: There was that no exceptions are thrown (sugyan++)
 
