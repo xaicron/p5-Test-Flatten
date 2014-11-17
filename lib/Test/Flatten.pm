@@ -14,7 +14,8 @@ our $BORDER_LENGTH = 78;
 our $CAPTION_COLOR = ['clear'];
 our $NOTE_COLOR    = ['yellow'];
 
-our $ORG_SUBTEST = Test::More->can('subtest');
+our $ORG_SUBTEST = Test::Builder->can('subtest');
+our $ORG_TEST_MORE_SUBTEST = Test::More->can('subtest');
 
 $ENV{ANSI_COLORS_DISABLED} = 1 if $^O eq 'MSWin32';
 
@@ -22,8 +23,10 @@ sub import {
     my $class = caller(0);
     no warnings qw(redefine prototype);
     no strict 'refs';
-    *{"$class\::subtest"} = \&subtest;
-    *Test::More::subtest = \&subtest;
+    *Test::Builder::subtest = \&subtest;
+
+    # backward campatibility
+    *{"$class\::subtest"} = Test::More->can('subtest');
 }
 
 my $TEST_DIFF = 0;
@@ -37,7 +40,7 @@ END {
 }
 
 sub subtest {
-    my ($caption, $test, @args) = @_;
+    my ($self, $caption, $test, @args) = @_;
 
     my $builder = Test::More->builder;
     unless (ref $test eq 'CODE') {
