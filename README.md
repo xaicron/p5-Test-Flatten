@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/xaicron/p5-Test-Flatten.svg?branch=master)](https://travis-ci.org/xaicron/p5-Test-Flatten)
 # NAME
 
 Test::Flatten - subtest output to a flatten
