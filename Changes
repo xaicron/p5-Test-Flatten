@@ -2,6 +2,9 @@ Revision history for Perl extension Test::Flatten
 
 {{$NEXT}}
 
+0.11 2014-11-19T07:56:48Z
+    - change override method, Test::More to Test::Builder
+
 0.10 2014-10-18T02:13:31Z
     - support additional args for subtest (hixi++)
 

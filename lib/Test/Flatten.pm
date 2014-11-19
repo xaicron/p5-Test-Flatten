@@ -6,7 +6,7 @@ use Test::More ();
 use Test::Builder ();
 use Term::ANSIColor qw(colored);
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 our $BORDER_COLOR  = [qw|cyan bold|];
 our $BORDER_CHAR   = '-';
